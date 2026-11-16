@@ -1,0 +1,74 @@
+# =========================================================================
+# Build trees
+# =========================================================================
+# Every build directory (build/, build-asan/, cmake-build-debug/, out/, ...)
+build/
+build-*/
+cmake-build-*/
+out/
+out-*/
+
+# =========================================================================
+# CMake generated files
+# =========================================================================
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+compile_commands.json
+CMakeUserPresets.json
+.ninja_deps
+.ninja_log
+build.ninja
+Testing/
+install_manifest.txt
+
+# =========================================================================
+# IDE / editor
+# =========================================================================
+.idea/
+.vscode/
+*.iml
+*.layout
+*.swp
+*~
+.cproject
+.project
+.settings/
+
+# =========================================================================
+# Compiled artefacts
+# =========================================================================
+*.o
+*.obj
+*.a
+*.lib
+*.exe
+*.dll
+*.pdb
+*.ilk
+
+# =========================================================================
+# Denoiser output
+# =========================================================================
+# --method all writes its results here.
+output/
+
+# The CLI's default destination (denoised.png) and the demo results produced
+# by running the filters on test.jpg. test.jpg itself is the sample input and
+# stays tracked.
+denoised*.png
+denoised*.jpg
+test_anisotropic.*
+test_bilateral.*
+test_dct.*
+test_nlm.*
+test_tv.*
+test_noisy.*
+test_denoised.*
+
+# =========================================================================
+# OS clutter
+# =========================================================================
+.DS_Store
+Thumbs.db
+desktop.ini
