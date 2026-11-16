@@ -1,4 +1,4 @@
-# ImageDenoiser
+# Image Denoiser Project
 
 A modular C++17 image-denoising **library** and **CLI**. Five denoising algorithms
 from four different mathematical families sit behind one abstract interface, are
@@ -9,6 +9,22 @@ The point of the project is architectural rather than "one more filter": a singl
 `ImageDenoiser` interface, stateless `const` implementations that are safe to share
 across threads, and a front end that can run every algorithm on one image and show
 you the results side by side.
+
+---
+
+## Example Outputs
+
+<h4 align="center">Original Image vs Denoised Image using Bilateral Filter</h4>
+
+<img src="images/darwin-vegher.jpg" width="400" /> <img src="images/darwin-vegher_bilateral.jpg" width="400" />
+
+<h4 align="center">Original Image vs Denoised Image using Total Variation Filter</h4>
+
+<img src="images/florian-olivo.jpg" width="400" /> <img src="images/florian-olivo_tv.jpg" width="400" />
+
+<h4 align="center">Original Image vs Denoised Image using Discrete Cosine Transform Filter</h4>
+
+<img src="images/yana-yaryhina.jpg" width="400" /> <img src="images/yana-yaryhina_dct.jpg" width="400" />
 
 ---
 
@@ -112,7 +128,7 @@ automatically — nothing else needs to change. The only three-argument
 | `TotalVariationFilter` | `tv` | Convex optimization (ROF, Chambolle dual) | `O(T · C)` | `lambda`, `num_iterations`, `time_step` |
 
 References: Tomasi & Manduchi (ICCV 1998); Buades, Coll & Morel (CVPR 2005);
-Donoho & Johnstone (1994) / Dabov et al. BM3D (2007); Perona & Malik (TPAMI 1990);
+Yu & Sapiro (2011) ; Perona & Malik (TPAMI 1990);
 Rudin, Osher & Fatemi (1992) with Chambolle's dual projection (2004).
 
 All filters share these conventions:
