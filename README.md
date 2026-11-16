@@ -137,6 +137,9 @@ All filters share these conventions:
 - A C++17 compiler (tested with GCC 15.1/13, MinGW-w64 and MSVC 2019+)
 - OpenCV ≥ 4.0 with `core`, `imgproc`, `imgcodecs`
 - Optional: OpenMP (enables the parallel filtering loops automatically)
+- Optional: binutils `objdump` — lets the Windows runtime bundler resolve
+  exactly which DLLs are needed; without it, every DLL in the located
+  toolchain directories is copied instead
 
 ```bash
 cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
@@ -152,7 +155,7 @@ Binaries land in `build/`: `denoiser-cli` (or `denoiser-cli.exe`).
 |---|---|---|
 | `DENOISER_BUILD_TESTS` | `ON` | Builds and registers the test suite with CTest. |
 | `DENOISER_ENABLE_SANITIZERS` | `OFF` | Adds `-fsanitize=address,undefined` (GCC/Clang). Fails fast if the toolchain cannot link the sanitizer runtime. |
-| `DENOISER_BUNDLE_RUNTIME` | `ON` (Windows) | Copies OpenCV/compiler DLLs next to each executable so it runs without `PATH` setup. |
+| `DENOISER_BUNDLE_RUNTIME` | `ON` (Windows) | Bundles the required OpenCV/compiler runtime DLLs next to the executables so they run without `PATH` setup (objdump import-table scan, bulk-copy fallback). |
 
 `-O3` is applied to `Release` builds only, so `Debug` and `RelWithDebInfo` stay
 debuggable and ASan stack traces stay readable.
@@ -160,11 +163,17 @@ debuggable and ASan stack traces stay readable.
 <details>
 <summary>Windows / MSYS2 notes</summary>
 
-The `CMakeLists.txt` auto-detects an MSYS2 OpenCV at `C:/msys64/mingw64` and appends
-it to `CMAKE_PREFIX_PATH`, so a plain `cmake -S . -B build` works from CLion or a
+The `CMakeLists.txt` auto-detects MSYS2/MinGW OpenCV in two steps and appends it
+to `CMAKE_PREFIX_PATH`: first the MSYS2 environment of the configured compiler
+itself (any install root — `C:/msys64`, `D:/msys64`, `C:/mingw64`, ...), then
+the standard `C:/msys64` environments (`mingw64`, `ucrt64`, `clang64`,
+`clangarm64`). A plain `cmake -S . -B build` therefore works from CLion or a
 plain shell. For any other OpenCV location, pass `-DOpenCV_DIR=...` or
-`-DCMAKE_PREFIX_PATH=...`. The post-build step copies every transitive DLL next to
-the executables.
+`-DCMAKE_PREFIX_PATH=...` — paths passed explicitly always take precedence.
+The post-build step resolves every transitive DLL dependency of the
+executables with binutils' `objdump` and copies it next to the binary;
+without `objdump` it falls back to copying every DLL from the toolchain's
+runtime directories.
 </details>
 
 ---
